@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forge Digital — Web Design for the Builders of Tomorrow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #3a3a4a;
+    --white: #ffffff;
+    --cream: #f0edf8;
+    --steel: #ede8f8;
+    --orange: #a78bdc;
+    --orange-light: #c3a8f0;
+    --muted: #8e87a8;
+    --border: rgba(100,80,160,0.15);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: #ffffff;
+    color: var(--black);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* Single unified nav bar */
+  .top-bar {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 101;
+    background: var(--orange);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px;
+    height: 60px;
+  }
+  .top-bar-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px; letter-spacing: 3px;
+    color: #ffffff;
+    text-decoration: none; cursor: pointer;
+    flex-shrink: 0;
+  }
+  .top-bar-logo span { color: rgba(255,255,255,0.6); }
+  .top-bar-nav {
+    display: flex; align-items: center; gap: 2px;
+    list-style: none;
+  }
+  .top-bar-nav a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 12px; letter-spacing: 1px;
+    text-transform: uppercase; font-weight: 600;
+    padding: 6px 14px; border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+    white-space: nowrap;
+  }
+  .top-bar-nav a:hover { color: #fff; background: rgba(255,255,255,0.15); }
+  .top-bar-nav a.active { color: #fff; background: rgba(255,255,255,0.2); }
+  .top-bar-actions {
+    display: flex; align-items: center; gap: 8px;
+    flex-shrink: 0;
+  }
+  .top-bar-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 18px;
+    border-radius: 40px;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .top-bar-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .top-bar-btn.call {
+    background: #ffffff;
+    color: var(--orange);
+  }
+  .top-bar-btn.book {
+    background: rgba(255,255,255,0.2);
+    color: #ffffff;
+    border: 1.5px solid rgba(255,255,255,0.45);
+  }
+  .top-bar-btn.book:hover { background: rgba(255,255,255,0.3); }
+
+  /* Page system */
+  .page {
+    display: none;
+    min-height: 100vh;
+    padding-top: 60px;
+  }
+  .page.active { display: block; }
+
+  /* Hero */
+  .hero {
+    min-height: calc(100vh - 60px);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 60px 90px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(167,139,220,0.15) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 50% at 20% 80%, rgba(237,232,248,0.8) 0%, transparent 70%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: 
+      linear-gradient(rgba(100,80,160,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(100,80,160,0.06) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--orange); font-weight: 500;
+    margin-bottom: 28px;
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+  .hero-tag::before {
+    content: ''; width: 32px; height: 1px; background: var(--orange);
+  }
+  h1.hero-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 10vw, 148px);
+    line-height: 0.92;
+    letter-spacing: 2px;
+    color: var(--black);
+    opacity: 0; transform: translateY(40px);
+    animation: fadeUp 1s ease 0.4s forwards;
+    max-width: 1100px;
+  }
+  h1.hero-headline em {
+    font-style: italic;
+    font-family: 'DM Serif Display', serif;
+    color: var(--orange);
+  }
+  .hero-sub {
+    margin-top: 36px;
+    font-size: 17px; color: rgba(58,58,74,0.6);
+    max-width: 480px; line-height: 1.7;
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp 0.8s ease 0.7s forwards;
+  }
+  .hero-actions {
+    margin-top: 52px; display: flex; gap: 20px; align-items: center;
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp 0.8s ease 0.9s forwards;
+  }
+  .btn-primary {
+    background: var(--orange);
+    color: var(--white);
+    padding: 16px 40px;
+    font-weight: 700; font-size: 13px;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    text-decoration: none; border-radius: 2px;
+    transition: background 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--orange-light); transform: translateY(-2px); }
+  .btn-ghost {
+    color: rgba(58,58,74,0.65);
+    text-decoration: none;
+    font-size: 13px; letter-spacing: 1px;
+    display: flex; align-items: center; gap: 10px;
+    transition: color 0.2s, gap 0.2s;
+  }
+  .btn-ghost:hover { color: var(--black); gap: 14px; }
+  .btn-ghost::after { content: '→'; }
+
+  .hero-scroll-indicator {
+    position: absolute; bottom: 40px; right: 60px;
+    writing-mode: vertical-rl;
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(58,58,74,0.35);
+    display: flex; align-items: center; gap: 12px;
+    opacity: 0; animation: fadeIn 1s ease 1.5s forwards;
+  }
+  .hero-scroll-indicator::after {
+    content: ''; width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--orange), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+
+  /* Ticker */
+  .ticker {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 0;
+    overflow: hidden; white-space: nowrap;
+    background: rgba(237,232,248,0.6);
+  }
+  .ticker-inner {
+    display: inline-flex; gap: 0;
+    animation: ticker 25s linear infinite;
+  }
+  .ticker-item {
+    display: inline-flex; align-items: center; gap: 24px;
+    font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(58,58,74,0.5); padding: 0 40px;
+    font-weight: 500;
+  }
+  .ticker-item span { color: var(--orange); font-size: 18px; }
+
+  /* Section styles */
+  section { padding: 130px 60px; }
+
+  .section-label {
+    display: flex; align-items: center; gap: 14px;
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--orange); font-weight: 500;
+    margin-bottom: 60px;
+  }
+  .section-label::before { content: ''; width: 24px; height: 1px; background: var(--orange); }
+
+  /* About/value section */
+  .about { background: var(--steel); position: relative; overflow: hidden; }
+  .about::before {
+    content: '';
+    position: absolute; top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(167,139,220,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 100px; align-items: center;
+  }
+  .about-left h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(42px, 4vw, 64px);
+    line-height: 1.1; margin-bottom: 28px;
+  }
+  .about-left h2 em { color: var(--orange); font-style: italic; }
+  .about-left p {
+    color: rgba(58,58,74,0.6); font-size: 16px;
+    line-height: 1.8; margin-bottom: 20px;
+  }
+  .about-right {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+  }
+  .stat-card {
+    background: rgba(255,255,255,0.7);
+    padding: 36px 32px;
+    border: 1px solid var(--border);
+  }
+  .stat-card:nth-child(2) { margin-top: 32px; }
+  .stat-card:nth-child(4) { margin-top: 32px; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px; color: var(--orange);
+    line-height: 1;
+  }
+  .stat-label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+
+  /* How it works */
+  .process { background: #ffffff; }
+  .process h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 96px);
+    line-height: 0.95; margin-bottom: 80px;
+    max-width: 700px;
+  }
+  .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+  .step {
+    background: rgba(237,232,248,0.4);
+    border: 1px solid var(--border);
+    padding: 48px 36px;
+    position: relative;
+    transition: border-color 0.3s, background 0.3s;
+    overflow: hidden;
+  }
+  .step::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--orange);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .step:hover::before { transform: scaleX(1); }
+  .step:hover { background: rgba(237,232,248,0.8); border-color: rgba(167,139,220,0.4); }
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px; color: rgba(100,80,160,0.08);
+    line-height: 1; margin-bottom: 24px;
+  }
+  .step h3 { font-size: 18px; font-weight: 500; margin-bottom: 12px; }
+  .step p { font-size: 14px; color: rgba(58,58,74,0.55); line-height: 1.7; }
+
+  /* Pricing */
+  .pricing { background: var(--steel); }
+  .pricing-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 80px;
+  }
+  .pricing-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 96px);
+    line-height: 0.95;
+  }
+  .pricing-header p {
+    max-width: 340px; color: rgba(58,58,74,0.55);
+    font-size: 15px; line-height: 1.7;
+  }
+  .pricing-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+  .plan {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    padding: 40px 32px;
+    position: relative;
+    transition: transform 0.3s ease, border-color 0.3s;
+    border-radius: 4px;
+  }
+  .plan:hover { transform: translateY(-6px); border-color: rgba(167,139,220,0.5); }
+  .plan.featured {
+    background: var(--orange);
+    border-color: var(--orange);
+  }
+  .plan.featured * { color: var(--black) !important; }
+  .plan.featured .plan-feature-item::before { background: var(--black) !important; }
+  .plan.featured .plan-divider { background: rgba(10,10,10,0.2) !important; }
+  .plan-badge {
+    display: inline-block;
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    font-weight: 700;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.25);
+    color: var(--white) !important;
+    margin-bottom: 32px;
+    border-radius: 1px;
+  }
+  .plan-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px; letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .plan-desc {
+    font-size: 13px; color: rgba(58,58,74,0.55);
+    margin-bottom: 36px; line-height: 1.6;
+  }
+  .plan-price {
+    margin-bottom: 36px;
+  }
+  .plan-price .amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px; line-height: 1;
+    color: var(--black);
+  }
+  .plan-price .currency {
+    font-size: 28px; vertical-align: top; margin-top: 16px;
+    display: inline-block; color: var(--muted);
+  }
+  .plan-price .note {
+    font-size: 12px; color: var(--muted); letter-spacing: 1px;
+    display: block; margin-top: 6px; text-transform: uppercase;
+  }
+  .plan-divider { height: 1px; background: var(--border); margin: 32px 0; }
+  .plan-features { list-style: none; margin-bottom: 44px; }
+  .plan-feature-item {
+    font-size: 14px; color: rgba(58,58,74,0.7);
+    padding: 10px 0;
+    display: flex; align-items: flex-start; gap: 14px;
+    line-height: 1.5;
+  }
+  .plan-feature-item::before {
+    content: '';
+    width: 20px; height: 20px; min-width: 20px;
+    background: var(--orange);
+    color: var(--black);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    margin-top: 1px;
+  }
+  .plan-cta {
+    display: block; width: 100%;
+    padding: 16px;
+    text-align: center;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .plan:not(.featured) .plan-cta {
+    border: 1px solid rgba(167,139,220,0.6);
+    color: var(--orange);
+  }
+  .plan:not(.featured) .plan-cta:hover {
+    background: var(--orange); color: var(--white);
+  }
+  .plan.featured .plan-cta {
+    background: rgba(255,255,255,0.2); color: var(--white);
+  }
+  .plan.featured .plan-cta:hover { background: rgba(255,255,255,0.35); }
+
+  /* Why us */
+  .why { background: #ffffff; overflow: hidden; position: relative; }
+  .why::after {
+    content: 'FORGE';
+    position: absolute; bottom: -40px; right: -20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 280px; color: rgba(100,80,160,0.03);
+    line-height: 1; pointer-events: none; user-select: none;
+  }
+  .why h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(40px, 4vw, 60px);
+    max-width: 700px; margin-bottom: 80px;
+    line-height: 1.2;
+  }
+  .why h2 em { color: var(--orange); font-style: italic; }
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  .why-card {
+    padding: 52px 40px;
+    border: 1px solid var(--border);
+    background: rgba(237,232,248,0.3);
+    position: relative; overflow: hidden;
+    transition: background 0.3s;
+  }
+  .why-card:hover { background: rgba(237,232,248,0.7); }
+  .why-icon {
+    font-size: 40px; margin-bottom: 28px;
+    display: block;
+  }
+  .why-card h3 {
+    font-size: 20px; font-weight: 500;
+    margin-bottom: 14px; letter-spacing: 0.5px;
+  }
+  .why-card p { font-size: 14px; color: rgba(58,58,74,0.55); line-height: 1.8; }
+
+  /* Contact */
+  .contact {
+    background: var(--steel);
+    color: var(--black);
+    padding: 130px 60px;
+    position: relative; overflow: hidden;
+  }
+  .contact::before {
+    content: '';
+    position: absolute; top: -300px; right: -300px;
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(167,139,220,0.2) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .contact-inner {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 100px; align-items: center;
+    position: relative; z-index: 1;
+  }
+  .contact h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 7vw, 108px);
+    line-height: 0.9;
+    color: var(--black);
+    margin-bottom: 32px;
+  }
+  .contact p {
+    font-size: 17px; color: rgba(10,10,10,0.65);
+    line-height: 1.7; margin-bottom: 48px;
+    max-width: 420px;
+  }
+  .contact-info { display: flex; flex-direction: column; gap: 20px; }
+  .contact-link {
+    display: flex; align-items: center; gap: 16px;
+    text-decoration: none; color: var(--black);
+    font-size: 18px; font-weight: 500;
+    transition: gap 0.2s;
+  }
+  .contact-link:hover { gap: 22px; }
+  .contact-link-icon {
+    width: 48px; height: 48px;
+    background: var(--orange); color: var(--white);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; min-width: 48px;
+    transition: transform 0.2s;
+  }
+  .contact-link:hover .contact-link-icon { transform: rotate(10deg); }
+  .contact-form-side { }
+  .form-group { margin-bottom: 24px; }
+  .form-group label {
+    display: block; font-size: 11px;
+    letter-spacing: 2px; text-transform: uppercase;
+    font-weight: 700; margin-bottom: 10px;
+    color: rgba(10,10,10,0.7);
+  }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    background: rgba(10,10,10,0.1);
+    border: 1px solid rgba(10,10,10,0.2);
+    border-radius: 2px;
+    padding: 14px 18px;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--black);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .form-group select option { color: var(--black); background: var(--cream); }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    border-color: var(--black);
+    background: rgba(10,10,10,0.15);
+  }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-group input::placeholder,
+  .form-group textarea::placeholder { color: rgba(10,10,10,0.4); }
+  .form-submit {
+    background: var(--orange);
+    color: var(--white);
+    border: none;
+    padding: 18px 48px;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    border-radius: 2px; cursor: pointer;
+    width: 100%;
+    transition: background 0.2s, transform 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .form-submit:hover { background: var(--orange-light); transform: translateY(-2px); }
+
+  /* Footer */
+  footer {
+    background: var(--steel);
+    border-top: 1px solid var(--border);
+    padding: 48px 60px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px; letter-spacing: 3px; color: var(--black);
+  }
+  .footer-logo span { color: var(--orange); }
+  footer p { font-size: 12px; color: var(--muted); letter-spacing: 0.5px; }
+
+  /* Animations */
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes scrollLine {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* Highlight bar animation on scroll */
+  .highlight-bar {
+    display: inline-block;
+    position: relative;
+  }
+  .highlight-bar::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0;
+    width: 0; height: 3px;
+    background: var(--orange);
+    transition: width 1s ease 0.4s;
+  }
+  .highlight-bar.visible::after { width: 100%; }
+
+  /* Support Section */
+  .support { background: var(--steel); }
+  .support h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(40px, 4vw, 60px);
+    line-height: 1.1; margin-bottom: 16px;
+  }
+  .support h2 em { color: var(--orange); font-style: italic; }
+  .support-intro {
+    font-size: 17px; color: rgba(58,58,74,0.6);
+    max-width: 560px; line-height: 1.7; margin-bottom: 60px;
+  }
+  .support-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .support-card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 44px 40px;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .support-card:hover { transform: translateY(-4px); border-color: rgba(167,139,220,0.4); }
+  .support-card-icon { font-size: 36px; margin-bottom: 20px; display: block; }
+  .support-card h3 { font-size: 20px; font-weight: 500; margin-bottom: 12px; }
+  .support-card p { font-size: 14px; color: rgba(58,58,74,0.6); line-height: 1.7; margin-bottom: 28px; }
+  .support-form { margin-top: 60px; max-width: 640px; }
+  .support-form h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px; letter-spacing: 2px;
+    margin-bottom: 32px; color: var(--black);
+  }
+  .support-submit {
+    background: var(--orange);
+    color: var(--white);
+    border: none;
+    padding: 16px 48px;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    border-radius: 2px; cursor: pointer;
+    width: 100%;
+    transition: background 0.2s, transform 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .support-submit:hover { background: var(--orange-light); transform: translateY(-2px); }
+  .support-toast {
+    position: fixed; bottom: 40px; right: 40px;
+    background: var(--black); color: #ffffff;
+    padding: 18px 28px;
+    border-radius: 4px;
+    font-size: 14px; font-weight: 500;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 8px 32px rgba(58,58,74,0.2);
+    z-index: 9999;
+    transform: translateY(100px); opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), opacity 0.4s ease;
+    pointer-events: none;
+  }
+  .support-toast.show { transform: translateY(0); opacity: 1; }
+  .support-toast-icon { font-size: 20px; }
+
+  /* Explore dropdown - removed, nav is now inline */
+
+  @media (max-width: 900px) {
+    .support-grid { grid-template-columns: 1fr; }
+    .top-bar { padding: 10px 16px; gap: 8px; }
+    .top-bar-label { display: none; }
+    .top-bar-btn { padding: 7px 14px; font-size: 12px; }
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    section { padding: 90px 30px; }
+    .hero { padding: 0 30px 80px; }
+    .about-grid, .contact-inner { grid-template-columns: 1fr; gap: 60px; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .pricing-cards { grid-template-columns: 1fr; }
+    .pricing-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .why-grid { grid-template-columns: 1fr; }
+    .footer-logo, footer p { font-size: 12px; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Unified Nav Bar -->
+<div class="top-bar">
+  <a class="top-bar-logo" onclick="showPage('home')">FORGE<span>.</span></a>
+
+  <ul class="top-bar-nav">
+    <li><a onclick="showPage('home')" data-page="home" class="active">Home</a></li>
+    <li><a onclick="showPage('process')" data-page="process">Process</a></li>
+    <li><a onclick="showPage('pricing')" data-page="pricing">Pricing</a></li>
+    <li><a onclick="showPage('why')" data-page="why">Why Us</a></li>
+    <li><a onclick="showPage('support')" data-page="support">Support</a></li>
+    <li><a onclick="showPage('contact')" data-page="contact">Get Started</a></li>
+  </ul>
+
+  <div class="top-bar-actions">
+    <a href="tel:9707292606" class="top-bar-btn call">Call Us</a>
+    <a href="https://calendar.google.com/calendar/u/0/r/eventedit?add=gildersleeveaidan@gmail.com" target="_blank" class="top-bar-btn book">Book Appointment</a>
+  </div>
+</div>
+
+<!-- PAGE: Home -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-tag">Web Design for the Trades</div>
+    <h1 class="hero-headline">Your Business<br>Deserves a <em>Real</em><br>Online Presence.</h1>
+    <p class="hero-sub">We build high-performance websites for hardworking businesses—contractors, tradespeople, and blue-collar startups ready to grow.</p>
+    <div class="hero-actions">
+      <a onclick="showPage('pricing')" class="btn-primary" style="cursor:pointer;">See Our Plans</a>
+      <a onclick="showPage('process')" class="btn-ghost" style="cursor:pointer;">How it works</a>
+    </div>
+  </section>
+
+  <div class="ticker">
+    <div class="ticker-inner">
+      <div class="ticker-item"> Roofing & Contractors</div>
+      <div class="ticker-item"> Plumbing & HVAC</div>
+      <div class="ticker-item"> Landscaping & Lawn Care</div>
+      <div class="ticker-item"> Electrical Services</div>
+      <div class="ticker-item"> Auto & Diesel</div>
+      <div class="ticker-item"> Welding & Fabrication</div>
+      <div class="ticker-item"> Moving & Hauling</div>
+      <div class="ticker-item"> General Contractors</div>
+      <div class="ticker-item"> Roofing & Contractors</div>
+      <div class="ticker-item"> Plumbing & HVAC</div>
+      <div class="ticker-item"> Landscaping & Lawn Care</div>
+      <div class="ticker-item"> Electrical Services</div>
+      <div class="ticker-item"> Auto & Diesel</div>
+      <div class="ticker-item"> Welding & Fabrication</div>
+      <div class="ticker-item"> Moving & Hauling</div>
+      <div class="ticker-item"> General Contractors</div>
+    </div>
+  </div>
+
+  <section class="about" id="about">
+    <div class="about-grid">
+      <div class="about-left reveal">
+        <div class="section-label">Who We Are</div>
+        <h2>Built for businesses that <em>work hard.</em></h2>
+        <p>Most web designers don't understand the trades. We do. We know your customers search Google before they call—and if you don't have a site, they're calling your competitor.</p>
+        <p>Forge Digital creates clean, fast, professional websites tailored to blue-collar businesses. No fluff, no jargon—just results that make your phone ring.</p>
+      </div>
+      <div class="about-right">
+        <div class="stat-card reveal reveal-delay-1">
+          <div class="stat-num">7×</div>
+          <div class="stat-label">More likely to get leads with a website</div>
+        </div>
+        <div class="stat-card reveal reveal-delay-2">
+          <div class="stat-num">48h</div>
+          <div class="stat-label">Average turnaround from deposit to draft</div>
+        </div>
+        <div class="stat-card reveal reveal-delay-3">
+          <div class="stat-num">97%</div>
+          <div class="stat-label">Client satisfaction rate</div>
+        </div>
+        <div class="stat-card reveal reveal-delay-4">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Ongoing support on select plans</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">FORGE<span>.</span></div>
+    <p>© 2025 Forge Digital. All rights reserved.</p>
+    <p style="font-size:11px;color:#9d97b8;">Websites built for businesses that build things.</p>
+  </footer>
+</div>
+
+<!-- PAGE: Process -->
+<div class="page" id="page-process">
+  <section class="process">
+    <div class="section-label reveal">How It Works</div>
+    <h2 class="reveal">From <em style="font-style:italic;color:var(--orange)">Zero</em><br>to Online<br>in Days.</h2>
+    <div class="process-steps">
+      <div class="step reveal reveal-delay-1">
+        <div class="step-num">01</div>
+        <h3>Discovery Call</h3>
+        <p>We learn your business, your goals, and who your customers are. Takes 30 minutes. No pressure, no obligation.</p>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step-num">02</div>
+        <h3>Design Draft</h3>
+        <p>Within 48 hours of your deposit, you'll see a working draft of your new site—built to your brand and industry.</p>
+      </div>
+      <div class="step reveal reveal-delay-3">
+        <div class="step-num">03</div>
+        <h3>Revisions</h3>
+        <p>We refine based on your feedback. Your plan determines how many revision rounds you get—all plans include at least one full round.</p>
+      </div>
+      <div class="step reveal reveal-delay-4">
+        <div class="step-num">04</div>
+        <h3>Launch & Hand-Off</h3>
+        <p>Your site goes live. We set up your domain, walk you through everything, and hand you the keys. You own it outright.</p>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-logo">FORGE<span>.</span></div>
+    <p>© 2025 Forge Digital. All rights reserved.</p>
+    <p style="font-size:11px;color:#9d97b8;">Websites built for businesses that build things.</p>
+  </footer>
+</div>
+
+<!-- PAGE: Pricing -->
+<div class="page" id="page-pricing">
+  <section class="pricing">
+    <div class="pricing-header">
+      <div class="reveal">
+        <div class="section-label">Pricing</div>
+        <h2>Straightforward.<br>No Surprises.</h2>
+      </div>
+      <p class="reveal">One-time flat fee. You own your website completely. Pick the plan that fits where your business is today.</p>
+    </div>
+
+    <div class="pricing-cards">
+      <!-- Starter -->
+      <div class="plan reveal reveal-delay-1">
+        <div class="plan-name">Starter</div>
+        <div class="plan-desc">Perfect for new businesses that need a professional online presence fast.</div>
+        <div class="plan-price">
+          <span class="currency">$</span><span class="amount">1,200</span>
+          <span class="note">One-time payment</span>
+        </div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li class="plan-feature-item">Up to 5 pages (Home, About, Services, Gallery, Contact)</li>
+          <li class="plan-feature-item">Mobile-responsive design</li>
+          <li class="plan-feature-item">Contact form & click-to-call button</li>
+          <li class="plan-feature-item">1 round of revisions</li>
+          <li class="plan-feature-item">Basic SEO setup</li>
+          <li class="plan-feature-item">Domain & hosting guidance</li>
+          <li class="plan-feature-item">14-day post-launch support</li>
+        </ul>
+        <a onclick="showPage('contact')" class="plan-cta" style="cursor:pointer;">Get Started</a>
+      </div>
+
+      <!-- Pro (Featured) -->
+      <div class="plan featured reveal reveal-delay-2">
+        <div class="plan-badge">Most Popular</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-desc">For businesses ready to compete online and convert visitors into paying customers.</div>
+        <div class="plan-price">
+          <span class="currency">$</span><span class="amount">1,800</span>
+          <span class="note">One-time payment</span>
+        </div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li class="plan-feature-item">Up to 8 pages with custom layout</li>
+          <li class="plan-feature-item">Premium mobile-responsive design</li>
+          <li class="plan-feature-item">Contact form, quote request & click-to-call</li>
+          <li class="plan-feature-item">3 rounds of revisions</li>
+          <li class="plan-feature-item">Full on-page SEO optimization</li>
+          <li class="plan-feature-item">Google Business Profile setup</li>
+          <li class="plan-feature-item">Photo gallery & testimonials section</li>
+          <li class="plan-feature-item">30-day post-launch support</li>
+        </ul>
+        <a onclick="showPage('contact')" class="plan-cta" style="cursor:pointer;">Get Started</a>
+      </div>
+
+      <!-- Premium -->
+      <div class="plan reveal reveal-delay-3">
+        <div class="plan-name">Premium</div>
+        <div class="plan-desc">Full-service build for established businesses that want to dominate their local market.</div>
+        <div class="plan-price">
+          <span class="currency">$</span><span class="amount">2,300</span>
+          <span class="note">One-time payment</span>
+        </div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li class="plan-feature-item">Unlimited pages with custom design system</li>
+          <li class="plan-feature-item">Animations & interactive elements</li>
+          <li class="plan-feature-item">All Pro features included</li>
+          <li class="plan-feature-item">Unlimited revisions until you love it</li>
+          <li class="plan-feature-item">Advanced local SEO strategy</li>
+          <li class="plan-feature-item">Competitor analysis & positioning</li>
+          <li class="plan-feature-item">Social media integration</li>
+          <li class="plan-feature-item">60-day post-launch support</li>
+          <li class="plan-feature-item">Priority response & dedicated support</li>
+        </ul>
+        <a onclick="showPage('contact')" class="plan-cta" style="cursor:pointer;">Get Started</a>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-logo">FORGE<span>.</span></div>
+    <p>© 2025 Forge Digital. All rights reserved.</p>
+    <p style="font-size:11px;color:#9d97b8;">Websites built for businesses that build things.</p>
+  </footer>
+</div>
+
+<!-- PAGE: Why Us -->
+<div class="page" id="page-why">
+  <section class="why">
+    <div class="section-label reveal">Why Choose Forge</div>
+    <h2 class="reveal">We don't just build sites. We build <em>tools that work</em> for you.</h2>
+    <div class="why-grid">
+      <div class="why-card reveal reveal-delay-1">
+        <span class="why-icon"></span>
+        <h3>Fast Turnaround</h3>
+        <p>Most agencies take weeks. We deliver a working draft within 48 hours of your deposit. Your business can't afford to wait.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-2">
+        <span class="why-icon"></span>
+        <h3>Built for the Trades</h3>
+        <p>We specialize in blue-collar businesses. We know how your customers search, what makes them trust you, and what makes them call.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-3">
+        <span class="why-icon"></span>
+        <h3>Mobile-First Design</h3>
+        <p>Over 70% of local searches happen on phones. Every site we build looks and works perfectly on every device, every time.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-1">
+        <span class="why-icon"></span>
+        <h3>You Own It</h3>
+        <p>No subscriptions, no monthly platform fees. You pay once and the site is yours—code, domain, everything. We hand you the keys.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-2">
+        <span class="why-icon"></span>
+        <h3>Built to Convert</h3>
+        <p>Pretty sites that don't generate calls are worthless. Every element we design is aimed at turning visitors into customers.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-3">
+        <span class="why-icon"></span>
+        <h3>Real Support</h3>
+        <p>Have a question after launch? We pick up the phone. Every plan includes post-launch support so you're never left stranded.</p>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-logo">FORGE<span>.</span></div>
+    <p>© 2025 Forge Digital. All rights reserved.</p>
+    <p style="font-size:11px;color:#9d97b8;">Websites built for businesses that build things.</p>
+  </footer>
+</div>
+
+<!-- PAGE: Support -->
+<div class="page" id="page-support">
+  <section class="support">
+    <div class="section-label reveal">Support</div>
+    <h2 class="reveal">We're Here <em>When You Need Us.</em></h2>
+    <p class="support-intro reveal">Have a question about your site, need a quick update, or running into an issue? Reach out and we'll get back to you fast.</p>
+
+    <div class="support-grid">
+      <div class="support-card reveal reveal-delay-1">
+        <span class="support-card-icon"></span>
+        <h3>Live Chat Support</h3>
+        <p>Need a quick answer? Send us a message and we typically respond within a few hours during business hours.</p>
+        <a onclick="showPage('contact')" class="btn-primary" style="display:inline-block;font-size:12px;padding:12px 28px;cursor:pointer;">Start a Chat</a>
+      </div>
+      <div class="support-card reveal reveal-delay-2">
+        <span class="support-card-icon"></span>
+        <h3>Phone & Text</h3>
+        <p>Prefer talking it through? Call or text us directly at <strong>(970) 729-2606</strong>. We pick up.</p>
+        <a href="tel:9707292606" class="btn-primary" style="display:inline-block;font-size:12px;padding:12px 28px;">Call Now</a>
+      </div>
+      <div class="support-card reveal reveal-delay-3">
+        <span class="support-card-icon"></span>
+        <h3>Quick Site Edits</h3>
+        <p>Need to update a phone number, swap a photo, or change some text? We offer fast turnaround on minor updates for all plan clients.</p>
+        <a href="mailto:gildersleeveaidan@gmail.com" class="btn-primary" style="display:inline-block;font-size:12px;padding:12px 28px;">Email Us</a>
+      </div>
+      <div class="support-card reveal reveal-delay-4">
+        <span class="support-card-icon"></span>
+        <h3>Post-Launch Guidance</h3>
+        <p>Not sure how to update your Google Business Profile or point your domain? We walk every client through everything after launch.</p>
+        <a onclick="showPage('contact')" class="btn-primary" style="display:inline-block;font-size:12px;padding:12px 28px;cursor:pointer;">Get Help</a>
+      </div>
+    </div>
+
+    <div class="support-form reveal">
+      <h3>Send a Support Request</h3>
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="supportName" placeholder="John Smith">
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="supportEmail" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label>What do you need help with?</label>
+        <select id="supportTopic">
+          <option value="">Select a topic...</option>
+          <option>Site update or edit request</option>
+          <option>Something on my site is broken</option>
+          <option>Domain or hosting question</option>
+          <option>SEO or Google Business help</option>
+          <option>Billing question</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Describe your issue</label>
+        <textarea id="supportMessage" placeholder="Tell us what's going on and we'll sort it out..."></textarea>
+      </div>
+      <button class="support-submit" onclick="handleSupportSubmit(this)">Submit Support Request →</button>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-logo">FORGE<span>.</span></div>
+    <p>© 2025 Forge Digital. All rights reserved.</p>
+    <p style="font-size:11px;color:#9d97b8;">Websites built for businesses that build things.</p>
+  </footer>
+</div>
+
+<!-- PAGE: Contact -->
+<div class="page" id="page-contact">
+  <section class="contact">
+    <div class="contact-inner">
+      <div>
+        <div class="section-label" style="color:var(--orange);">Contact</div>
+        <h2>Let's Build Something.</h2>
+        <p>Ready to get your business online? Reach out directly or fill out the form and we'll get back to you within one business day.</p>
+        <div class="contact-info">
+          <a href="tel:9707292606" class="contact-link">
+            <div class="contact-link-icon"></div>
+            <div>
+              <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;opacity:0.55;margin-bottom:4px;">Call or Text</div>
+              <div>(970) 729-2606</div>
+            </div>
+          </a>
+          <a href="mailto:gildersleeveaidan@gmail.com" class="contact-link">
+            <div class="contact-link-icon"></div>
+            <div>
+              <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;opacity:0.55;margin-bottom:4px;">Email</div>
+              <div>gildersleeveaidan@gmail.com</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="contact-form-side">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" placeholder="John Smith">
+        </div>
+        <div class="form-group">
+          <label>Business Name</label>
+          <input type="text" placeholder="Smith's Roofing LLC">
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" placeholder="(555) 000-0000">
+        </div>
+        <div class="form-group">
+          <label>Which Plan Interests You?</label>
+          <select>
+            <option value="">Select a plan...</option>
+            <option>Starter — $1,200</option>
+            <option>Pro — $1,800</option>
+            <option>Premium — $2,300</option>
+            <option>Not sure yet</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tell us about your business</label>
+          <textarea placeholder="What do you do, where are you located, and what's your goal with a new website?"></textarea>
+        </div>
+        <button class="form-submit" onclick="handleSubmit(this)">Send Message →</button>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-logo">FORGE<span>.</span></div>
+    <p>© 2025 Forge Digital. All rights reserved.</p>
+    <p style="font-size:11px;color:#9d97b8;">Websites built for businesses that build things.</p>
+  </footer>
+</div>
+
+<!-- Support Toast Notification -->
+<div class="support-toast" id="supportToast">
+  <span class="support-toast-icon"></span>
+  <span>Support request sent! We'll be in touch shortly.</span>
+</div>
+
+<script>
+  // Page navigation
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + pageId).classList.add('active');
+    document.querySelectorAll('.top-bar-nav a').forEach(a => {
+      a.classList.toggle('active', a.dataset.page === pageId);
+    });
+    window.scrollTo(0, 0);
+    setTimeout(() => {
+      const reveals = document.querySelectorAll('#page-' + pageId + ' .reveal');
+      reveals.forEach(el => { el.classList.remove('visible'); void el.offsetWidth; });
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
+        });
+      }, { threshold: 0.1 });
+      reveals.forEach(el => obs.observe(el));
+    }, 50);
+  }
+
+  // Init reveal on home page
+  const reveals = document.querySelectorAll('#page-home .reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Form submit handler
+  function handleSubmit(btn) {
+    btn.textContent = 'Message Sent! ';
+    btn.style.background = 'var(--orange-light)';
+    btn.style.color = '#ffffff';
+    btn.disabled = true;
+  }
+
+  // Support form handler with toast notification
+  function handleSupportSubmit(btn) {
+    const name = document.getElementById('supportName').value.trim();
+    const email = document.getElementById('supportEmail').value.trim();
+    const topic = document.getElementById('supportTopic').value;
+    const message = document.getElementById('supportMessage').value.trim();
+
+    if (!name || !email || !topic || !message) {
+      btn.textContent = 'Please fill in all fields ↑';
+      btn.style.background = '#c084fc';
+      setTimeout(() => {
+        btn.textContent = 'Submit Support Request →';
+        btn.style.background = '';
+      }, 2500);
+      return;
+    }
+
+    btn.textContent = 'Request Sent! ';
+    btn.style.background = '#a78bdc';
+    btn.disabled = true;
+
+    const toast = document.getElementById('supportToast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 4500);
+  }
+
+  // Parallax hero (home page only)
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const heroBg = document.querySelector('.hero-bg');
+    if (heroBg) heroBg.style.transform = `translateY(${scrolled * 0.3}px)`;
+    const heroGrid = document.querySelector('.hero-grid');
+    if (heroGrid) heroGrid.style.transform = `translateY(${scrolled * 0.15}px)`;
+  });
+</script>
+</body>
+</html>
